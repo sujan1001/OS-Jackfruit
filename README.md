@@ -1,35 +1,55 @@
 # Multi-Container Runtime
 
-This project implements a lightweight container runtime in C with a long-running supervisor and a kernel memory monitor.
-
-## 1. Team Information
-
-Name 1: Sujan Masaguppi
-SRN 1: PES1UG24AM292
-Name 2: Shryes M
-SRN 2: PES1UG24AM272
+A lightweight Linux container runtime in C with a long-running supervisor and a kernel-space memory monitor.
 
 ---
 
-2. Build, Load, and Run Instructions
-Prerequisites
+## 1. Team Information
+
+| Name | SRN |
+|------|-----|
+| Sujan S M | PES1UG24AM292 |
+| Shryes M | PES1UG24AM272 |
+
+---
+
+## 2. Build, Load, and Run Instructions
+
+### Prerequisites
+
 Ubuntu 22.04 or 24.04 VM with Secure Boot OFF. No WSL.
 
+```bash
 sudo apt update
 sudo apt install -y build-essential linux-headers-$(uname -r)
-Build
+```
+
+### Build
+
+```bash
 cd boilerplate
 make
-This produces: engine, memory_hog, cpu_hog, io_pulse, and monitor.ko.
+```
+
+This produces: `engine`, `memory_hog`, `cpu_hog`, `io_pulse`, and `monitor.ko`.
 
 To verify only user-space compilation (CI-safe, no sudo/kernel needed):
 
+```bash
 make -C boilerplate ci
-Run Environment Preflight
+```
+
+### Run Environment Preflight
+
+```bash
 cd boilerplate
 chmod +x environment-check.sh
 sudo ./environment-check.sh
-Prepare Root Filesystem
+```
+
+### Prepare Root Filesystem
+
+```bash
 mkdir rootfs-base
 wget https://dl-cdn.alpinelinux.org/alpine/v3.20/releases/x86_64/alpine-minirootfs-3.20.3-x86_64.tar.gz
 tar -xzf alpine-minirootfs-3.20.3-x86_64.tar.gz -C rootfs-base
@@ -41,17 +61,29 @@ cp -a ./rootfs-base ./rootfs-beta
 # Copy workload binaries into rootfs
 cp memory_hog cpu_hog io_pulse ./rootfs-alpha/
 cp memory_hog cpu_hog io_pulse ./rootfs-beta/
-Do not commit rootfs-base/ or rootfs-* to the repository.
+```
 
-Load the Kernel Module
+Do not commit `rootfs-base/` or `rootfs-*` to the repository.
+
+### Load the Kernel Module
+
+```bash
 sudo insmod monitor.ko
 ls -l /dev/container_monitor   # device should appear
 dmesg | tail                   # should show: [container_monitor] Module loaded
-Start the Supervisor (Terminal 1)
-sudo ./engine supervisor ./rootfs-base
-The supervisor prints Supervisor ready. Control socket: /tmp/mini_runtime.sock and stays alive.
+```
 
-Use the CLI (Terminal 2)
+### Start the Supervisor (Terminal 1)
+
+```bash
+sudo ./engine supervisor ./rootfs-base
+```
+
+The supervisor prints `Supervisor ready. Control socket: /tmp/mini_runtime.sock` and stays alive.
+
+### Use the CLI (Terminal 2)
+
+```bash
 # Start containers in the background
 sudo ./engine start alpha ./rootfs-alpha /cpu_hog --soft-mib 48 --hard-mib 80
 sudo ./engine start beta  ./rootfs-beta  /memory_hog --soft-mib 32 --hard-mib 64
@@ -67,13 +99,21 @@ sudo ./engine stop alpha
 
 # Run a container and block until it exits
 sudo ./engine run gamma ./rootfs-alpha "/cpu_hog 10"
-Test Memory Limits
+```
+
+### Test Memory Limits
+
+```bash
 # memory_hog allocates 8 MiB/s; with hard limit 64 MiB it gets killed after ~8 allocations
 sudo ./engine start memtest ./rootfs-alpha /memory_hog --soft-mib 32 --hard-mib 64
 sleep 12
 dmesg | tail -20               # SOFT LIMIT and HARD LIMIT events
 sudo ./engine ps               # state should show hard_limit_killed
-Scheduler Experiment
+```
+
+### Scheduler Experiment
+
+```bash
 # Run two cpu_hog instances simultaneously with different nice values
 cp -a ./rootfs-base ./rootfs-lo
 cp -a ./rootfs-base ./rootfs-hi
@@ -84,13 +124,20 @@ sudo ./engine start hi ./rootfs-hi "/cpu_hog 30" --nice 15
 
 # Compare progress by watching logs
 watch -n1 'sudo ./engine logs lo | tail -3 && echo "---" && sudo ./engine logs hi | tail -3'
-Unload and Clean Up
+```
+
+### Unload and Clean Up
+
+```bash
 sudo ./engine stop alpha
 sudo ./engine stop beta
 # Ctrl+C the supervisor (or: kill $(pgrep -f "engine supervisor"))
 dmesg | tail
 sudo rmmod monitor
 make clean
+```
+
+---
 ## 3. Demo Screenshots
 
 ### SS1. Supervisor startup + multi-container launch
