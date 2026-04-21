@@ -140,31 +140,38 @@ make clean
 Supervisor starts and then tracks multiple containers concurrently.
 
 ### SS2. Metadata tracking (`engine ps`)
-![Metadata table]![alt text](3.png)
+<img width="1201" height="347" alt="image" src="https://github.com/user-attachments/assets/b7f92e9b-ee84-4b30-a42f-f753bf0c3586" />
+
 Container ID, host PID, state, and limits are visible in one listing.
 
 ### SS3. Logging pipeline
-![Pipeline output]![alt text](4.png)
+<img width="566" height="713" alt="image" src="https://github.com/user-attachments/assets/b9ddd04b-4206-44a2-a8e7-fddc87b52f46" />
+
 Logs captured from container stdout/stderr are persisted and retrievable.
 
 ### SS4. CLI to supervisor IPC
-![CLI IPC]![alt text](5.png)
+<img width="576" height="727" alt="image" src="https://github.com/user-attachments/assets/1ab2b44f-a2cc-4204-9b3e-ccc1d4fe7a06" />
+
 CLI client commands are issued from a separate terminal, and the supervisor returns a structured response over the Unix domain socket control channel.
 
 ### SS5. Soft-limit warning event
-![Soft-limit event]![alt text](6.png)
+<img width="568" height="721" alt="image" src="https://github.com/user-attachments/assets/0dbd8313-cfb8-403d-a1cb-2a989a8cc161" />
+
 `dmesg` records first threshold crossing at soft memory limit.
 
 ### SS6. Hard-limit enforcement
-![Hard-limit event]![alt text](7.png)
+<img width="572" height="725" alt="image" src="https://github.com/user-attachments/assets/d4021ba0-734b-484f-8bc0-616d78ff901a" />
+
 Container state shows kill outcome after exceeding configured limits.
 
 ### SS7. Scheduling experiment evidence
-![Scheduling evidence]![alt text](8.png)
+<img width="570" height="329" alt="image" src="https://github.com/user-attachments/assets/fba370b9-8fb4-4416-89e7-0c768e230b37" />
+
 Different `nice` values produce visible CPU-share differences.
 
 ### SS8. Clean teardown
-![Teardown]![alt text](9.png)
+<img width="572" height="725" alt="image" src="https://github.com/user-attachments/assets/38302654-7daf-4bdb-bcb1-1a2b420aced9" />
+
 No leftover supervisor/container zombies after shutdown.
 
 ---
