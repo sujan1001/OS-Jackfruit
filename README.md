@@ -135,8 +135,8 @@ make clean
 ## 3. Demo Screenshots
 
 ### SS1. Supervisor startup + multi-container launch
-![Supervisor startup]![alt text](1-2.png)
-![Multiple containers]![alt text](2.png)
+<img width="559" height="322" alt="image" src="https://github.com/user-attachments/assets/2ea41eaf-4497-421a-b439-796c784bcf30" />
+
 Supervisor starts and then tracks multiple containers concurrently.
 
 ### SS2. Metadata tracking (`engine ps`)
