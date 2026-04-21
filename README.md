@@ -4,10 +4,10 @@ This project implements a lightweight container runtime in C with a long-running
 
 ## 1. Team Information
 
-Name 1: Sasyak Subudhi
-SRN 1: PES1UG24AM256
-Name 2: Surya A Bhat
-SRN 2: PES1UG24AM296
+Name 1: Sujan Masaguppi
+SRN 1: PES1UG24AM292
+Name 2: Shryes M
+SRN 2: PES1UG24AM272
 
 ---
 
